@@ -59,24 +59,25 @@ impl Report {
     }
 
     pub fn sum_of_dampened_reports(&self) -> i32 {
-        let mut total = self.data.iter().filter(|d| Self::is_safe(d)).count();
+        let mut total = 0;
+        self.data.iter().for_each(|v| {
+            if Self::is_safe(v) {
+                total += 1;
+                return;
+            }
 
-        self.data
-            .iter()
-            .filter(|d| !Self::is_safe(d))
-            .for_each(|v| {
-                for (k, _n) in v.iter().enumerate() {
-                    let mut p = v.clone();
-                    p.remove(k);
+            for (k, _n) in v.iter().enumerate() {
+                let mut p = v.clone();
+                p.remove(k);
 
-                    if Self::is_safe(&p) {
-                        total += 1;
-                        return;
-                    };
-                }
-            });
+                if Self::is_safe(&p) {
+                    total += 1;
+                    return;
+                };
+            }
+        });
 
-        total as i32
+        total
     }
 }
 
