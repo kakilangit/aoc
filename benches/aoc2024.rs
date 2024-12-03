@@ -1,4 +1,4 @@
-use aoc::aoc2024::{day01, day02};
+use aoc::aoc2024::{day01, day02, day03};
 use criterion::{criterion_group, criterion_main, Criterion};
 
 fn bench_day_one(c: &mut Criterion) {
@@ -23,5 +23,16 @@ fn bench_day_two(c: &mut Criterion) {
     });
 }
 
-criterion_group!(benches, bench_day_one, bench_day_two);
+fn bench_day_three(c: &mut Criterion) {
+    let computer = day03::Computer::new_from_data().unwrap();
+    c.bench_function("do_multiplication", |b| {
+        b.iter(|| computer.do_multiplication())
+    });
+
+    c.bench_function("do_conditional_multiplication", |b| {
+        b.iter(|| computer.do_conditional_multiplication())
+    });
+}
+
+criterion_group!(benches, bench_day_one, bench_day_two, bench_day_three);
 criterion_main!(benches);
