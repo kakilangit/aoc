@@ -5,5 +5,11 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0.93"
-criterion = "0.5.1"
 rust-embed = { version = "8.5.0", features = ["interpolate-folder-path"] }
+
+[[bench]]
+name = "aoc2024"
+harness = false
+
+[dev-dependencies]
+criterion = "0.5.1"

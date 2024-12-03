@@ -4,14 +4,14 @@ use anyhow::Ok;
 
 use crate::read_input;
 
-struct Location {
+pub struct Location {
     left: Vec<i32>,
     right: Vec<i32>,
     right_counter: HashMap<i32, i32>,
 }
 
 impl Location {
-    fn new_from_data() -> anyhow::Result<Self> {
+    pub fn new_from_data() -> anyhow::Result<Self> {
         let reader = read_input("2024/1.txt")?;
 
         let mut left = vec![];
@@ -43,7 +43,7 @@ impl Location {
         })
     }
 
-    fn sum_of_difference(&self) -> anyhow::Result<i32> {
+    pub fn sum_of_difference(&self) -> anyhow::Result<i32> {
         Ok(self
             .left
             .iter()
@@ -52,7 +52,7 @@ impl Location {
             .sum::<i32>())
     }
 
-    fn sum_of_similarities(&self) -> anyhow::Result<i32> {
+    pub fn sum_of_similarities(&self) -> anyhow::Result<i32> {
         Ok(self
             .left
             .iter()

@@ -7,7 +7,7 @@ use std::{
 
 use anyhow::Ok;
 
-mod aoc2024;
+pub mod aoc2024;
 
 #[derive(rust_embed::Embed)]
 #[folder = "$CARGO_MANIFEST_DIR/resources"]
