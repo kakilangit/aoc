@@ -19,9 +19,18 @@ impl Location {
         let mut right_counter = HashMap::new();
         for line in reader.lines() {
             let s = line?;
-            let split = s.split(' ').collect::<Vec<_>>();
-            let l = split.first().unwrap_or(&"").parse::<i32>()?;
-            let r = split.last().unwrap_or(&"").parse::<i32>()?;
+            let split = s
+                .split(' ')
+                .filter_map(|v| {
+                    if v.is_empty() {
+                        None
+                    } else {
+                        Some(v.parse::<i32>().unwrap_or(0))
+                    }
+                })
+                .collect::<Vec<i32>>();
+            let l = split.first().cloned().unwrap_or_default();
+            let r = split.last().cloned().unwrap_or_default();
 
             if let Some(v) = right_counter.get_mut(&r) {
                 *v += 1;
