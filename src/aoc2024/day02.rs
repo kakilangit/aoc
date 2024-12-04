@@ -98,13 +98,13 @@ mod test {
     use super::{part_one, part_two};
 
     #[test]
-    fn test_part_one() {
+    fn test_2_1() {
         let ans = part_one().unwrap();
         assert_eq!(663, ans);
     }
 
     #[test]
-    fn test_part_two() {
+    fn test_2_2() {
         let ans = part_two().unwrap();
         assert_eq!(692, ans);
     }

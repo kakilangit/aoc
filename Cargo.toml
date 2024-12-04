@@ -8,7 +8,19 @@ anyhow = "1.0.93"
 rust-embed = { version = "8.5.0", features = ["interpolate-folder-path"] }
 
 [[bench]]
-name = "aoc2024"
+name = "aoc2024_01"
+harness = false
+
+[[bench]]
+name = "aoc2024_02"
+harness = false
+
+[[bench]]
+name = "aoc2024_03"
+harness = false
+
+[[bench]]
+name = "aoc2024_04"
 harness = false
 
 [dev-dependencies]
