@@ -215,10 +215,7 @@ impl ElfMonitor {
         let max_down = self.matrix.len() - 2;
         let max_right = self.matrix[0].len() - 2;
 
-        println!("{:?} {:?}", max_down, max_right);
         while pointer.0 <= max_down && pointer.1 <= max_right {
-            println!("{:?}", &pointer);
-
             let c = &self.matrix[pointer.0][pointer.1];
             if c == "A" {
                 let top_left = &self.matrix[pointer.0 - 1][pointer.1 - 1];
@@ -263,8 +260,6 @@ impl ElfMonitor {
 
 #[cfg(test)]
 mod test {
-    use std::borrow::Cow;
-
     use super::ElfMonitor;
 
     #[test]
@@ -278,38 +273,7 @@ mod test {
 
     #[test]
     fn test_4_2() {
-        let input = r#"MMMSXXMASM
-        MSAMXMSMSA
-        AMXSXMAAMM
-        MSAMASMSMX
-        XMASAMXAMM
-        XXAMMXXAMA
-        SMSMSASXSS
-        SAXAMASAAA
-        MAMMMXMMMM
-        MXMXAXMASX"#;
-
-        let mut matrix = vec![];
-        let mut row = vec![];
-        for i in input.chars() {
-            if i.is_ascii_uppercase() {
-                row.push(Cow::from(i.to_string()));
-            } else if !row.is_empty() {
-                matrix.push(row.clone());
-                row.clear();
-            }
-        }
-
-        if !row.is_empty() {
-            matrix.push(row);
-        }
-
-        let monitor = ElfMonitor {
-            matrix,
-            ..Default::default()
-        };
-
-        println!("{:?}", monitor.matrix);
+        let monitor = ElfMonitor::new_from_data().unwrap();
 
         let total = monitor.count_crossmas();
         assert_eq!(9, total);
