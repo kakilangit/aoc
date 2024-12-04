@@ -59,16 +59,13 @@ impl ElfMonitor {
             .map(|line| line.map(|l| l.chars().map(|c| Cow::from(c.to_string())).collect()))
             .collect::<Result<_, _>>()?;
 
-        let mut monitor = Self {
+        Ok(Self {
             matrix,
             ..Default::default()
-        };
-        monitor.calculate_vectors();
-
-        Ok(monitor)
+        })
     }
 
-    fn calculate_vectors(&mut self) {
+    pub fn calculate_vectors(&mut self) {
         self.calculate_straights();
         self.calculate_diagonals();
     }
@@ -87,7 +84,6 @@ impl ElfMonitor {
             .chain(self.diagonal_top_right.iter())
             .chain(self.diagonal_bottom_left.iter())
             .chain(self.diagonal_bottom_right.iter())
-            .filter(|x| x.len() >= 4)
             .cloned()
             .collect();
 
@@ -211,6 +207,55 @@ impl ElfMonitor {
         }
         self.diagonal_top_right.dedup();
     }
+
+    pub fn count_crossmas(&self) -> i32 {
+        let mut total = 0;
+        let mut pointer = (1, 1);
+
+        let max_down = self.matrix.len() - 2;
+        let max_right = self.matrix[0].len() - 2;
+
+        while pointer.0 <= max_down && pointer.1 <= max_right {
+            let c = &self.matrix[pointer.0][pointer.1];
+            if c == "A" {
+                let top_left = &self.matrix[pointer.0 - 1][pointer.1 - 1];
+                let bottom_right = &self.matrix[pointer.0 + 1][pointer.1 + 1];
+                let top_right = &self.matrix[pointer.0 - 1][pointer.1 + 1];
+                let bottom_left = &self.matrix[pointer.0 + 1][pointer.1 - 1];
+
+                if Self::valid_cross(top_left, top_right, bottom_left, bottom_right) {
+                    total += 1;
+                }
+            }
+
+            if pointer.1 < max_right {
+                pointer.1 += 1;
+            } else {
+                pointer.1 = 1;
+                pointer.0 += 1;
+            }
+        }
+
+        total
+    }
+
+    fn valid_cross(top_left: &str, top_right: &str, bottom_left: &str, bottom_right: &str) -> bool {
+        let valid_char = |s| matches!(s, "M" | "S");
+
+        if !valid_char(top_left)
+            || !valid_char(top_right)
+            || !valid_char(bottom_left)
+            || !valid_char(bottom_right)
+        {
+            return false;
+        }
+
+        if top_left == bottom_right || top_right == bottom_left {
+            return false;
+        }
+
+        true
+    }
 }
 
 #[cfg(test)]
@@ -219,9 +264,18 @@ mod test {
 
     #[test]
     fn test_4_1() {
-        let monitor = ElfMonitor::new_from_data().unwrap();
+        let mut monitor = ElfMonitor::new_from_data().unwrap();
+        monitor.calculate_vectors();
 
         let total = monitor.count_xmas().unwrap();
         assert_eq!(2562, total);
+    }
+
+    #[test]
+    fn test_4_2() {
+        let monitor = ElfMonitor::new_from_data().unwrap();
+
+        let total = monitor.count_crossmas();
+        assert_eq!(9, total);
     }
 }
