@@ -11,13 +11,7 @@ pub struct Computer {
 impl Computer {
     pub fn new_from_data() -> anyhow::Result<Self> {
         let reader = read_input("2024/3.txt")?;
-
-        let mut raw = "".to_string();
-
-        for line in reader.lines() {
-            let s = line?;
-            raw.push_str(&s);
-        }
+        let raw = reader.lines().collect::<Result<String, _>>()?;
 
         Ok(Computer {
             raw: Cow::from(raw),
@@ -168,13 +162,13 @@ mod test {
     use super::{part_one, part_two};
 
     #[test]
-    fn test_part_one() {
+    fn test_3_1() {
         let ans = part_one().unwrap();
         assert_eq!(180233229, ans);
     }
 
     #[test]
-    fn test_part_two() {
+    fn test_3_2() {
         let ans = part_two().unwrap();
         assert_eq!(95411583, ans);
     }

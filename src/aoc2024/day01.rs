@@ -87,13 +87,13 @@ mod test {
     use super::{part_one, part_two};
 
     #[test]
-    fn test_part_one() {
+    fn test_1_1() {
         let ans = part_one().unwrap();
         assert_eq!(2367773, ans)
     }
 
     #[test]
-    fn test_part_two() {
+    fn test_1_2() {
         let ans = part_two().unwrap();
         assert_eq!(21271939, ans)
     }
