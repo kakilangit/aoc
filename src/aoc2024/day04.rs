@@ -65,6 +65,37 @@ impl ElfMonitor {
         })
     }
 
+    pub fn count_xmas_improved(&self) -> i32 {
+        let mut total = 0;
+        let mut pointer = (1, 1);
+
+        let max_down = self.matrix.len() - 2;
+        let max_right = self.matrix[0].len() - 2;
+
+        while pointer.0 <= max_down && pointer.1 <= max_right {
+            let c = &self.matrix[pointer.0][pointer.1];
+            if c == "A" {
+                let top_left = &self.matrix[pointer.0 - 1][pointer.1 - 1];
+                let bottom_right = &self.matrix[pointer.0 + 1][pointer.1 + 1];
+                let top_right = &self.matrix[pointer.0 - 1][pointer.1 + 1];
+                let bottom_left = &self.matrix[pointer.0 + 1][pointer.1 - 1];
+
+                if Self::valid_cross(top_left, top_right, bottom_left, bottom_right) {
+                    total += 1;
+                }
+            }
+
+            if pointer.1 < max_right {
+                pointer.1 += 1;
+            } else {
+                pointer.1 = 1;
+                pointer.0 += 1;
+            }
+        }
+
+        total
+    }
+
     pub fn calculate_vectors(&mut self) {
         self.calculate_straights();
         self.calculate_diagonals();
@@ -210,29 +241,29 @@ impl ElfMonitor {
 
     pub fn count_crossmas(&self) -> i32 {
         let mut total = 0;
-        let mut pointer = (1, 1);
+        let mut pos = (1, 1);
 
         let max_down = self.matrix.len() - 2;
         let max_right = self.matrix[0].len() - 2;
 
-        while pointer.0 <= max_down && pointer.1 <= max_right {
-            let c = &self.matrix[pointer.0][pointer.1];
+        while pos.0 <= max_down && pos.1 <= max_right {
+            let c = &self.matrix[pos.0][pos.1];
             if c == "A" {
-                let top_left = &self.matrix[pointer.0 - 1][pointer.1 - 1];
-                let bottom_right = &self.matrix[pointer.0 + 1][pointer.1 + 1];
-                let top_right = &self.matrix[pointer.0 - 1][pointer.1 + 1];
-                let bottom_left = &self.matrix[pointer.0 + 1][pointer.1 - 1];
+                let top_left = &self.matrix[pos.0 - 1][pos.1 - 1];
+                let bottom_right = &self.matrix[pos.0 + 1][pos.1 + 1];
+                let top_right = &self.matrix[pos.0 - 1][pos.1 + 1];
+                let bottom_left = &self.matrix[pos.0 + 1][pos.1 - 1];
 
                 if Self::valid_cross(top_left, top_right, bottom_left, bottom_right) {
                     total += 1;
                 }
             }
 
-            if pointer.1 < max_right {
-                pointer.1 += 1;
+            if pos.1 < max_right {
+                pos.1 += 1;
             } else {
-                pointer.1 = 1;
-                pointer.0 += 1;
+                pos.1 = 1;
+                pos.0 += 1;
             }
         }
 
