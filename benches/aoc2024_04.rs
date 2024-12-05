@@ -4,7 +4,7 @@ use criterion::{criterion_group, criterion_main, Criterion};
 fn part_one(c: &mut Criterion) {
     let monitor = day04::ElfMonitor::new_from_data().unwrap();
 
-    c.bench_function("count_xmas_improved", |b| b.iter(|| monitor.count_xmas()));
+    c.bench_function("count_xmas", |b| b.iter(|| monitor.count_xmas()));
 }
 
 fn part_two(c: &mut Criterion) {
