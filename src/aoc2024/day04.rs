@@ -1,41 +1,6 @@
-use std::{borrow::Cow, collections::HashMap, io::BufRead};
+use std::{borrow::Cow, io::BufRead};
 
 use crate::read_input;
-
-#[derive(Default)]
-struct Trie {
-    children: HashMap<char, Trie>,
-    is_end_of_word: bool,
-}
-
-impl Trie {
-    fn new() -> Self {
-        Trie {
-            children: HashMap::new(),
-            is_end_of_word: false,
-        }
-    }
-
-    fn insert(&mut self, word: &str) {
-        let mut node = self;
-        for ch in word.chars() {
-            node = node.children.entry(ch).or_default();
-        }
-        node.is_end_of_word = true;
-    }
-
-    fn search(&self, word: &str) -> bool {
-        let mut node = self;
-        for ch in word.chars() {
-            if let Some(next_node) = node.children.get(&ch) {
-                node = next_node;
-            } else {
-                return false;
-            }
-        }
-        node.is_end_of_word
-    }
-}
 
 #[derive(Clone, Copy)]
 enum Direction {
@@ -175,10 +140,7 @@ impl ElfMonitor {
             .map(|line| line.map(|l| l.chars().map(|c| Cow::from(c.to_string())).collect()))
             .collect::<Result<_, _>>()?;
 
-        Ok(Self {
-            matrix,
-            ..Default::default()
-        })
+        Ok(Self { matrix })
     }
 
     fn find_mas(&self, start: Pos) -> usize {
