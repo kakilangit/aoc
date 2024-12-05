@@ -70,41 +70,39 @@ impl ElfPrinter {
     }
 
     fn topological_sort(&self, update: &[i32]) -> Vec<i32> {
-        let mut in_degree: HashMap<&i32, usize> = HashMap::new();
         let mut graph: HashMap<&i32, Vec<i32>> = HashMap::new();
+        let mut level_tracker: HashMap<&i32, usize> = HashMap::new();
 
         for page in update {
-            in_degree.insert(page, 0);
             graph.insert(page, vec![]);
+            level_tracker.insert(page, 0);
         }
 
-        for (before, afters) in &self.rules {
+        for (before, pages_after) in &self.rules {
             if update.contains(before) {
-                for after in afters {
+                for after in pages_after {
                     if update.contains(after) {
                         graph.entry(before).or_default().push(*after);
-                        *in_degree.entry(after).or_insert(0) += 1;
+                        *level_tracker.entry(after).or_insert(0) += 1;
                     }
                 }
             }
         }
 
-        let mut queue: VecDeque<&i32> = in_degree
+        let mut queue: VecDeque<&i32> = level_tracker
             .iter()
-            .filter(|&(_, &degree)| degree == 0)
+            .filter(|&(_, &level)| level == 0)
             .map(|(node, _)| *node)
             .collect();
 
         let mut sorted_order = vec![];
-
         while let Some(current) = queue.pop_front() {
             sorted_order.push(*current);
-
             if let Some(neighbors) = graph.get(current) {
                 for neighbor in neighbors {
-                    if let Some(degree) = in_degree.get_mut(&neighbor) {
-                        *degree -= 1;
-                        if *degree == 0 {
+                    if let Some(level) = level_tracker.get_mut(&neighbor) {
+                        *level -= 1;
+                        if *level == 0 {
                             queue.push_back(neighbor);
                         }
                     }
