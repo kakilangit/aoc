@@ -23,5 +23,9 @@ harness = false
 name = "aoc2024_04"
 harness = false
 
+[[bench]]
+name = "aoc2024_05"
+harness = false
+
 [dev-dependencies]
 criterion = "0.5.1"
